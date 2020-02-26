@@ -44,7 +44,7 @@ public class CommandLineInterface {
 		 * Ensure libjnetpcap is installed
 		 */
 		try {
-			System.load("/usr/lib/x86_64-linux-gnu/libjnetpcap.so");
+			System.load("jnetpcap");
 			logger.trace(Pcap.libVersion());
 		} catch (UnsatisfiedLinkError e) {
 			logger.error("Missing libjnetpcap.so");
