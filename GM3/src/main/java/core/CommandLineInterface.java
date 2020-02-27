@@ -47,7 +47,7 @@ public class CommandLineInterface {
 			System.loadLibrary("jnetpcap");
 			logger.trace(Pcap.libVersion());
 		} catch (UnsatisfiedLinkError e) {
-			logger.error("Missing libjnetpcap.so");
+			logger.error("Missing libjnetpcap.jar Ensure LD_LIBRARY_PATH points to a directory with these objects");
 			logger.error(e);
 			return;
 		}
@@ -83,22 +83,30 @@ public class CommandLineInterface {
 	private static List<String> grassMarlin(String fingerprintsDirPath, String pcap) {
 		List<String> toReturn = new ArrayList<String>();
 		FPDocument fpdoc = FPDocument.getInstance();
+		logger.trace("Created new FPDocument");
 		try {
 			DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(fingerprintsDirPath));
 			for (Path path : directoryStream) {
+				logger.trace("Loading path for fingerprint [{}]", path);
 				fpdoc.load(path);
 			}
+			logger.trace("All fingerprint xml files loaded");
 			List<Fingerprint> fingerprints = fpdoc.getAllFingerprints();
 			FProcessor processor = new FProcessor(fingerprints);
 			PCAPImport pcapImport = new PCAPImport(FileSystems.getDefault().getPath(pcap),
 					fingerprints);
+			logger.trace("Created new pcap import processor");
 
 			LogicalGraph logicalGraph = new LogicalGraph();
 			PhysicalGraph physicalGraph = new PhysicalGraph();
 			Session session = new Session(logicalGraph, physicalGraph);
 			session.ProcessPcap(pcapImport);
+			logger.trace("Session finished processing pcap");
+			logger.debug("Found [{}] nodes", logicalGraph.getRawNodeList().size());
 
 			for (LogicalNode node : logicalGraph.getRawNodeList()) {
+				logger.trace("Dumping node xml");
+				logger.trace(node.toXml().toString());
 				toReturn.add(node.toXml().toString());
 			}
 
