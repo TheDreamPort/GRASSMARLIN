@@ -181,15 +181,15 @@ public class Session {
     }
 
     public Session(LogicalGraph lgraph, PhysicalGraph pgraph) {
-      currentSessionName = "";
-      this.dispatcher = new TaskDispatcher(
+      this.currentSessionName = "";
+      this.dispatcher         = new TaskDispatcher(
           Math.max(2, Runtime.getRuntime().availableProcessors() / 2), this);
-      this.graphLogical = lgraph;
-      this.graphPhysical = pgraph;
-      this.topology = new PhysicalTopology(this.graphPhysical);
-      this.graphSniffles = null;
-      this.listImports = null;
-      listPendingImports = null;
+      this.graphLogical       = lgraph;
+      this.graphPhysical      = pgraph;
+      this.topology           = new PhysicalTopology(this.graphPhysical);
+      this.graphSniffles      = null;
+      this.listImports        = null;
+      this.listPendingImports = null;
     }
 
     public void addPendingImports(Collection<ImportDialog.PreliminaryImportItem> items) {

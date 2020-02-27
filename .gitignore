@@ -1,5 +1,7 @@
 # Eclipse IDE
 .project
+.classpath
+.settings/
 
 /Installers
 /GM3/target
