@@ -275,7 +275,6 @@ public class GrassMarlinFx extends Application{
                                 new SeparatorMenuItem(),
                                 new ActiveMenuItem("_Clear Topology", EmbeddedIcons.Vista_Refresh, (event) -> {
                                     document.get().clearTopology();
-                                    tabController.clearTopology();
                                 }).setAccelerator(KeyCodeCombination.CONTROL_DOWN, KeyCode.X),
                                 new SeparatorMenuItem(),
                                 new ActiveMenuItem("_Import Files...", EmbeddedIcons.Vista_Import, GrassMarlinFx.this::Handle_ShowImportDialog).setAccelerator(KeyCodeCombination.CONTROL_DOWN, KeyCode.I),
