@@ -27,6 +27,7 @@ import core.document.fingerprint.FPDocument;
 import core.document.graph.LogicalGraph;
 import core.document.graph.LogicalNode;
 import core.document.graph.PhysicalGraph;
+import core.document.graph.PhysicalNode;
 import core.fingerprint.FProcessor;
 import core.fingerprint3.Fingerprint;
 import iadgov.offlinepcap.PCAPImport;
@@ -103,9 +104,14 @@ public class CommandLineInterface {
 			session.ProcessPcap(pcapImport);
 			logger.trace("Session finished processing pcap");
 			logger.debug("Found [{}] nodes", logicalGraph.getRawNodeList().size());
-
+			
+			logger.trace("Dumping logical node xml");
 			for (LogicalNode node : logicalGraph.getRawNodeList()) {
-				logger.trace("Dumping node xml");
+				logger.trace(node.toXml().toString());
+				toReturn.add(node.toXml().toString());
+			}
+			logger.trace("Dumping physical node xml");
+			for (PhysicalNode node: physicalGraph.getRawNodeList()) {
 				logger.trace(node.toXml().toString());
 				toReturn.add(node.toXml().toString());
 			}

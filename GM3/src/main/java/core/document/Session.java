@@ -134,18 +134,19 @@ public class Session {
     }
 
     public void ProcessPcap(ImportItem pcapImport) {
+    	getImports().add(pcapImport);
         taskDispatcher().accept(pcapImport);
         taskDispatcher().run();
-      /*
-        System.out.println("chekcing task dispatcher running");
-        if (!taskDispatcher().isRunning()) {
-            taskDispatcher().run();
-            System.out.println("TaskDispatcher run() is finished");
+        // Wait for the threads to finish processing this pcap item
+        while(pcapImport.getStatus() != ImportItem.Status.Complete) {
+        	try {
+        		Thread.sleep(250);
+        	} catch( InterruptedException ie) {
+        		// pass
+        	}
         }
-        Logger.log(this, Severity.Information, "Beginning Import of " + pcapImport.toString());
-        taskDispatcher().accept(pcapImport);
-        System.out.println("TaskDispatcher accept() is finished");
-        */
+        taskDispatcher().shutdown();
+
     }
 
 
@@ -187,8 +188,8 @@ public class Session {
       this.graphLogical       = lgraph;
       this.graphPhysical      = pgraph;
       this.topology           = new PhysicalTopology(this.graphPhysical);
-      this.graphSniffles      = null;
-      this.listImports        = null;
+      this.graphSniffles      = new MeshGraph();
+      this.listImports        = new core.document.ImportList();
       this.listPendingImports = null;
     }
 
@@ -249,6 +250,7 @@ public class Session {
         zos.write("</imports>".getBytes(StandardCharsets.UTF_8));
         zos.write(System.lineSeparator().getBytes(StandardCharsets.UTF_8));
 
+        /*
         zos.write("<pending_imports>".getBytes(StandardCharsets.UTF_8));
         for(ImportDialog.PreliminaryImportItem item : listPendingImports) {
             XmlElement eleItem = new XmlElement("item");
@@ -259,7 +261,7 @@ public class Session {
         }
         zos.write("</pending_imports>".getBytes(StandardCharsets.UTF_8));
         zos.write(System.lineSeparator().getBytes(StandardCharsets.UTF_8));
-
+*/
         topology.toXml(zos);
         zos.write("</session>".getBytes(StandardCharsets.UTF_8));
         zos.closeEntry();
